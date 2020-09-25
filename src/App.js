@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CardList from './CardList';
-import { robots } from './Robots';
+//import { robots } from './Robots';
 import SearchBox from './SearchBox';
 import './App.css'
 
@@ -9,9 +9,15 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
-            robots : robots,
+            robots : [],
             searchfield : '',
         }
+    }
+
+    componentDidMount(){
+        fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(users => this.setState({robots : users}))
     }
 
     onSearchChange = (event)  => {
@@ -24,6 +30,11 @@ class App extends Component {
             console.log(this.searchfield);
             return robots.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
         })
+        
+        //if there are no users it will appear load
+        if(this.state.robots.length === 0){
+            return <h1>Loading</h1>
+        }
 
         return (
         <div className='tc'>
